@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href='https://api.mapbox.com/mapbox-assembly/v0.23.2/assembly.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
+    <link href="https://unpkg.com/tabulator-tables@4.2.7/dist/css/tabulator.min.css" rel="stylesheet">
+
+    <style>
+        #map {
+            width: 80%;
+            height: calc(100vh);
+            background-color: darkgray;
+            float: right;
+        }
+
+        #example-table {
+            width: 20%;
+            height: calc(100vh);
+            background-color: darkgray;
+            float: left;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="map"></div>
+    <div id="example-table"></div>
+
+
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+    <script async defer src='https://api.mapbox.com/mapbox-assembly/v0.23.2/assembly.js'></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"
+        integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+        integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.2.7/dist/js/tabulator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.3.6/papaparse.min.js"></script>
+    <script>
+        var mymap = L.map('map').setView([33.765449,-81.037903], 8);
+        L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox.streets',
+            accessToken: 'pk.eyJ1IjoidXBjaGVlenkiLCJhIjoiY2p2Ym04OTQ1MHJsaTRkbzBzNWtkenJubSJ9.Ypni_vtzaMYWEvJsEGqCVw'
+        }).addTo(mymap);
+
+        // AJAX request for GeoJSON data
+        $.getJSON("data/counties.json", function (counties) {
+                Papa.parse('data/ticketCounts.csv', {
+
+                    download: true,
+                    header: true,
+                    complete: function (data) {
+
+                        processData(counties, data);
+
+                        // data is accessible to us here
+                        // console.log('data: ', data);
+
+                        // note that counties is also accessible here!
+                        // console.log('counties: ', counties);
+
+                    }
+                }); // end of Papa.parse()
+
+                // counties is accessible here
+                // console.log('counties1: ', counties);
+
+            })
+            .fail(function () {
+                console.log('an error occured with the ajax/json')
+            });
+
+        function processData(counties, data) {
+            // loop through all the counties
+            for (var i = 0; i < counties.features.length; i++) {
+
+                // short-hand reference to county properties
+                var props = counties.features[i].properties;
+
+                // console.log(data.data[0].workcounty.trim().length);
+
+                // for each of the CSV data rows
+                for (var j = 0; j < data.data.length; j++) {
+                    // if the county fips code and data fips code match
+                    if (props.countyname === data.data[j].workcounty.trim()) {
+                        data.data[j].workcounty = data.data[j].workcounty.trim()
+                        // re-assign the data for that county as the county's props
+                        counties.features[i].properties = data.data[j];
+                        // no need to keep looping, break from inner loop
+                        break;
+                        // console.log(data.data[j].workcounty.trim());
+                        // console.log('county fip: ', props.COUNTYFP);
+                        // console.log('data fip: ', data.data[j].COUNTY_FIP);
+                    }
+                }
+            }
+            // console.log('after: ', counties);
+            // console.log('props: ', props);
+
+            // empty array to store all the data values
+            var rates = [];
+
+            // iterate through all the counties
+            counties.features.forEach(function (county) {
+                console.log(county);
+                // iterate through all the props of each county
+                for (var prop in county.properties) {
+                    // console.log(prop);
+                    // if the attribute is a number and not one of the fips codes or name
+                    if (prop != "COUNTY_FIP" && prop != "STATE_FIP" && prop != "NAME") {
+                        // push that attribute value into the array
+                        rates.push(Number(county.properties[prop]));
+                    }
+                }
+            })
+            // console.log(rates);
+        }
+
+            // $("#example-table").tabulator({
+            //     columns:{
+            //         {title:"County"}
+            //     }
+            // });
+    </script>
+</body>
+
+</html>
