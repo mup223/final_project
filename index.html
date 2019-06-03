@@ -62,6 +62,7 @@
                     complete: function (data) {
 
                         processData(counties, data);
+                        createTable(data);
 
                         // data is accessible to us here
                         // console.log('data: ', data);
@@ -115,63 +116,67 @@
                 // console.log(county);
                 // iterate through all the props of each county
                 for (var prop in county.properties) {
-                    // push that attribute value into the array
-                    rates.push(Number(county.properties[prop]));
+                    if (prop != "countyname" && prop != "workcounty") {
+                        // push that attribute value into the array
+                        rates.push(Number(county.properties[prop]));
+                    }
                 }
             })
             // console.log(rates);
         }
 
         //define some sample data
-        var tabledata = [{
-                id: 1,
-                name: "Richland",
-                age: "12"
-            },
-            {
-                id: 2,
-                name: "Lexington",
-                age: "1"
-            },
-            {
-                id: 3,
-                name: "Greenville",
-                age: "42"
-            },
-            {
-                id: 4,
-                name: "Charleston",
-                age: "125"
-            },
-            {
-                id: 5,
-                name: "Pickens",
-                age: "16"
-            },
-        ];
+        // var tabledata = [{
+        //         id: 1,
+        //         name: "Richland",
+        //         age: "12"
+        //     },
+        //     {
+        //         id: 2,
+        //         name: "Lexington",
+        //         age: "1"
+        //     },
+        //     {
+        //         id: 3,
+        //         name: "Greenville",
+        //         age: "42"
+        //     },
+        //     {
+        //         id: 4,
+        //         name: "Charleston",
+        //         age: "125"
+        //     },
+        //     {
+        //         id: 5,
+        //         name: "Pickens",
+        //         age: "16"
+        //     },
+        // ];
 
-        //create Tabulator on DOM element with id "example-table"
-        var table = new Tabulator("#example-table", {
-            height: 205, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
-            data: tabledata, //assign data to table
-            layout: "fitColumns", //fit columns to width of table (optional)
-            columns: [ //Define Table Columns
-                {
-                    title: "County Name",
-                    field: "name",
-                    width: 150
+        function createTable(tabledata) {
+            //create Tabulator on DOM element with id "example-table"
+            var table = new Tabulator("#example-table", {
+                height: 205, // set height of table (in CSS or here), this enables the Virtual DOM and improves render speed dramatically (can be any valid css height value)
+                data: tabledata, //assign data to table
+                layout: "fitColumns", //fit columns to width of table (optional)
+                columns: [ //Define Table Columns
+                    {
+                        title: "County Name",
+                        field: "name",
+                        width: 150
+                    },
+                    {
+                        title: "Ticket Count",
+                        field: "age",
+                        align: "left",
+                        formatter: "progress"
+                    }
+                ],
+                rowClick: function (e, row) { //trigger an alert message when the row is clicked
+                    alert("Row " + row.getData().id + " Clicked!!!!");
                 },
-                {
-                    title: "Ticket Count",
-                    field: "age",
-                    align: "left",
-                    formatter: "progress"
-                }
-            ],
-            rowClick: function (e, row) { //trigger an alert message when the row is clicked
-                alert("Row " + row.getData().id + " Clicked!!!!");
-            },
-        });
+            });
+        }
     </script>
 </body>
 
