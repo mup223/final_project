@@ -62,7 +62,7 @@
                     complete: function (data) {
 
                         processData(counties, data);
-                        createTable(data);
+                        
 
                         // data is accessible to us here
                         // console.log('data: ', data);
@@ -105,8 +105,9 @@
                     }
                 }
             }
-            console.log('after: ', counties);
+            console.log('after: ', counties.features);
             // console.log('props: ', props);
+            createTable(counties);
 
             // empty array to store all the data values
             var rates = [];
@@ -152,7 +153,8 @@
         //         age: "16"
         //     },
         // ];
-
+        
+        
         function createTable(tabledata) {
             //create Tabulator on DOM element with id "example-table"
             var table = new Tabulator("#example-table", {
