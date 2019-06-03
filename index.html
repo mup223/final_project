@@ -92,8 +92,8 @@
                 // for each of the CSV data rows
                 for (var j = 0; j < data.data.length; j++) {
                     // if the county fips code and data fips code match
-                    if (props.countyname === data.data[j].workcounty.trim()) {
-                        data.data[j].workcounty = data.data[j].workcounty.trim()
+                    if (props.countyname === data.data[j].countyname.trim()) {
+                        data.data[j].workcounty = data.data[j].countyname.trim()
                         // re-assign the data for that county as the county's props
                         counties.features[i].properties = data.data[j];
                         // no need to keep looping, break from inner loop
