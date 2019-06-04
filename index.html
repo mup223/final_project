@@ -16,14 +16,14 @@
 
     <style>
         #map {
-            width: 80%;
+            width: 60%;
             height: calc(100vh);
             background-color: darkgray;
             float: right;
         }
 
         #example-table {
-            width: 20%;
+            width: 40%;
             height: calc(100vh);
             background-color: darkgray;
             float: left;
@@ -82,6 +82,9 @@
             });
 
         function processData(counties, data) {
+
+            var tableData = [];
+
             // loop through all the counties
             for (var i = 0; i < counties.features.length; i++) {
 
@@ -94,18 +97,25 @@
                 for (var j = 0; j < data.data.length; j++) {
                     // if the county fips code and data fips code match
                     if (props.countyname === data.data[j].countyname.trim()) {
-                        data.data[j].workcounty = data.data[j].countyname.trim()
+
+
+                        data.data[j].countyname = data.data[j].countyname.trim()
                         // re-assign the data for that county as the county's props
                         counties.features[i].properties = data.data[j];
                         // no need to keep looping, break from inner loop
+                        tableData.push(data.data[j]);
                         break;
                         // console.log(data.data[j].workcounty.trim());
                         // console.log('county fip: ', props.COUNTYFP);
                         // console.log('data fip: ', data.data[j].COUNTY_FIP);
                     }
+                    // console.log(data.data[j])
                 }
+
             }
-            // console.log('after: ', counties.features);
+
+            console.log(tableData)
+            //console.log('after: ', counties.features);
             // console.log('props: ', props);
             // createTable(counties);
 
@@ -125,10 +135,13 @@
             })
             console.log(counties);
             // county = counties.features;
-            drawMap(counties);
+            drawData(counties, tableData);
+
         }
 
-        function drawMap(counties) {
+        function drawData(counties, tableData) {
+
+            // create empty map
             var dataLayer = L.geoJson(counties, {
                 style: function (feature) {
                     return {
@@ -140,6 +153,33 @@
                     };
                 }
             }).addTo(map);
+
+            //define empty table
+            var table = new Tabulator("#example-table", {
+                data: null,
+                autoColumns: true,
+            });
+
+            //update first time
+            updateData(dataLayer, table, '2016')
+            createUI(dataLayer, table, '2016')
+
+        }
+
+        // this function will be called many times
+        function updateData(dataLayer, table, year) {
+
+            // updateMap
+
+            // update table with new data
+        }
+
+        function createUI(dataLayer, table, year) {
+
+
+            // listen for user change
+            // when new year is selected
+            // call updateData
         }
 
 
