@@ -32,6 +32,10 @@
         .map-marker {
             color: aqua
         }
+
+        #ui-controls {
+            width: 150px;
+        }
     </style>
 </head>
 
@@ -40,16 +44,12 @@
     <div id="map"></div>
     <div id="example-table"></div>
     <!-- ui-controls div is selected by the JS and dynamically added to the map -->
-    <div id='ui-controls'>
-        <div id='ui-controls'>
-            <label>Choose a data attribute:</label>
-            <select id="occupied">
-                <option value="HC01_VC06" selected>total employed workforce</option>
-                <option value="HC01_VC07">total unemployed workforce</option>
-                <option value="HC01_VC68">total government workforce</option>
-            </select>
-        </div> <!-- end ui-controls -->
-    </div> <!-- end ui-controls -->
+    <select id="ui-controls">
+        <option value="2016">2016</option>
+        <option value="2017">2017</option>
+        <option value="2018">2018</option>
+        <option value="2019">2019</option>
+    </select>
 
 
     <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
@@ -231,14 +231,14 @@
             });
 
             //update first time
-            updateData(dataLayer, table, '2016', colorize)
-            addUi(dataLayer); // add the UI controls
+            updateData(dataLayer, '2016', colorize)
+            addUi(dataLayer, '2016', colorize); // add the UI controls
             // createUI(dataLayer, table, '2016')
 
         }
 
         // this function will be called many times
-        function updateData(dataLayer, table, year, colorize) {
+        function updateData(dataLayer, year, colorize) {
 
             // updateMap
             dataLayer.eachLayer(function (layer) {
@@ -286,7 +286,7 @@
             })
         };
 
-        function addUi(dataLayer) {
+        function addUi(dataLayer, colorize) {
             // create the slider control
             var selectControl = L.control({
                 position: 'topright'
@@ -300,12 +300,13 @@
             // add the control to the map
             selectControl.addTo(map);
 
-            // $('select[id="occupied"]').change(function () {
-            //     // code executed here when change event occurs
-            //     // console.log('test' + this.value);
-            //     attributeValue = this.value;
-            //     updateMap(dataLayer);
-            // });
+            $('select[id="ui-controls"]').change(function () {
+                // code executed here when change event occurs
+                // console.log('test' + this.value);
+                var currentYear = this.value;
+                // console.log(currentYear);
+                updateData(dataLayer, currentYear, colorize);
+            });
         }
 
         // function createUI(dataLayer, table, year) {
