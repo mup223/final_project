@@ -240,14 +240,14 @@
             // table.hideColumn("2017");
 
             //update first time
-            updateMap(dataLayer, '2016', colorize, table);
-            addUi(dataLayer, '2016', colorize, table); // add the UI controls
+            updateMap(dataLayer, '2016', colorize, tableData, '2016');
+            addUi(dataLayer, '2016', colorize, tableData); // add the UI controls
             // createUI(dataLayer, table, '2016')
 
         }
 
         // this function will be called many times
-        function updateMap(dataLayer, year, colorize) {
+        function updateMap(dataLayer, year, colorize, tableData, currentYearString) {
 
             // updateMap
             dataLayer.eachLayer(function (layer) {
@@ -261,11 +261,27 @@
                     // stroke: false,
                     fillColor: color
                 });
-            })
+            });
+
+            var table = new Tabulator("#example-table", {
+                data: tableData,
+                // autoColumns: true,
+                layout: "fitColumns",
+                movableColumns: true,
+                columns: [{
+                        title: "countyname",
+                        field: "countyname"
+                    }, //link column to name property of user object
+                    {
+                        title: currentYearString,
+                        field: currentYearString
+                    }
+                ],
+            });
 
         };
 
-        function addUi(dataLayer, year, colorize, table) {
+        function addUi(dataLayer, year, colorize) {
             // create the slider control
             var selectControl = L.control({
                 position: 'topright'
@@ -285,8 +301,7 @@
                 var currentYear = this.value;
                 var currentYearString = '"' + currentYear + '"';
                 console.log(currentYearString);
-                table.updateData([{title: currentYearString, field: currentYearString}])
-                updateMap(dataLayer, currentYear, colorize);
+                updateMap(dataLayer, currentYear, colorize, currentYear);
             });
         }
     </script>
