@@ -222,14 +222,17 @@
             //define empty table
             var table = new Tabulator("#example-table", {
                 data: tableData,
+                index: "countyname",
                 // autoColumns: true,
                 layout: "fitColumns",
                 movableColumns: true,
                 columns: [{
+                        id:1,
                         title: "countyname",
                         field: "countyname"
                     }, //link column to name property of user object
                     {
+                        id:2,
                         title: "2016",
                         field: "2016"
                     }
@@ -240,14 +243,14 @@
             // table.hideColumn("2017");
 
             //update first time
-            updateMap(dataLayer, '2016', colorize, tableData, '2016');
-            addUi(dataLayer, '2016', colorize, tableData); // add the UI controls
+            updateMap(dataLayer, '2016', colorize, table, '2016');
+            addUi(dataLayer, '2016', colorize, table); // add the UI controls
             // createUI(dataLayer, table, '2016')
 
         }
 
         // this function will be called many times
-        function updateMap(dataLayer, year, colorize, tableData, currentYearString) {
+        function updateMap(dataLayer, year, colorize, table, currentYearString) {
 
             // updateMap
             dataLayer.eachLayer(function (layer) {
@@ -263,25 +266,11 @@
                 });
             });
 
-            var table = new Tabulator("#example-table", {
-                data: tableData,
-                // autoColumns: true,
-                layout: "fitColumns",
-                movableColumns: true,
-                columns: [{
-                        title: "countyname",
-                        field: "countyname"
-                    }, //link column to name property of user object
-                    {
-                        title: currentYearString,
-                        field: currentYearString
-                    }
-                ],
-            });
+            table.updateData([{id:2,title:"2017",field:"2017"}]);
 
         };
 
-        function addUi(dataLayer, year, colorize) {
+        function addUi(dataLayer, year, colorize, table) {
             // create the slider control
             var selectControl = L.control({
                 position: 'topright'
@@ -301,7 +290,7 @@
                 var currentYear = this.value;
                 var currentYearString = '"' + currentYear + '"';
                 console.log(currentYearString);
-                updateMap(dataLayer, currentYear, colorize, currentYear);
+                updateMap(dataLayer, currentYear, colorize, table, currentYear);
             });
         }
     </script>
