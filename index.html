@@ -222,7 +222,7 @@
             //define empty table
             var table = new Tabulator("#example-table", {
                 data: tableData,
-                index: "countyname",
+                // index: "countyname",
                 // autoColumns: true,
                 layout: "fitColumns",
                 movableColumns: true,
@@ -266,7 +266,7 @@
                 });
             });
 
-            table.updateData([{id:2,title:"2017",field:"2017"}]);
+            table.replaceData([{id:1, title:"countyname", field:"countyname"}, {id:2,title:"2017",field:"2017"}]);
 
         };
 
