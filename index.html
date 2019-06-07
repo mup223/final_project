@@ -227,23 +227,26 @@
                 layout: "fitColumns",
                 movableColumns: true,
                 columns: [{
-                        id:1,
                         title: "countyname",
                         field: "countyname"
-                    }, //link column to name property of user object
-                    {
-                        id:2,
-                        title: "2016",
-                        field: "2016"
-                    }
-                ],
+                    } //link column to name property of user object
+                ]
             });
-            console.log(table.columnManager.columns);
+            // console.log(table.columnManager.columns);
+
+            // add the default
+            table.addColumn({
+                    title: "2016",
+                    field: "2016"
+                },
+                true,
+                "2016"
+            );
 
             // table.hideColumn("2017");
 
             //update first time
-            updateMap(dataLayer, '2016', colorize, table, '2016');
+            updateMap(dataLayer, '2016', colorize, table);
             addUi(dataLayer, '2016', colorize, table); // add the UI controls
             // createUI(dataLayer, table, '2016')
 
@@ -265,9 +268,15 @@
                     fillColor: color
                 });
             });
-
-            table.replaceData([{id:1, title:"countyname", field:"countyname"}, {id:2,title:"2017",field:"2017"}]);
-
+            // then on UI change
+            table.deleteColumn("2016");
+            table.addColumn({
+                    title: currentYearString,
+                    field: currentYearString
+                },
+                true,
+                currentYearString
+            );
         };
 
         function addUi(dataLayer, year, colorize, table) {
