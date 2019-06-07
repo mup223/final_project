@@ -218,7 +218,7 @@
                 }
             }).addTo(map);
 
-            console.log(tableData)
+            // console.log(tableData)
             //define empty table
             var table = new Tabulator("#example-table", {
                 data: tableData,
@@ -239,14 +239,14 @@
             // table.hideColumn("2017");
 
             //update first time
-            updateData(dataLayer, '2016', colorize)
-            addUi(dataLayer, '2016', colorize); // add the UI controls
+            updateMap(dataLayer, '2016', colorize, table);
+            addUi(dataLayer, '2016', colorize, table); // add the UI controls
             // createUI(dataLayer, table, '2016')
 
         }
 
         // this function will be called many times
-        function updateData(dataLayer, year, colorize) {
+        function updateMap(dataLayer, year, colorize) {
 
             // updateMap
             dataLayer.eachLayer(function (layer) {
@@ -261,9 +261,10 @@
                     fillColor: color
                 });
             })
+            
         };
 
-        function addUi(dataLayer, year, colorize) {
+        function addUi(dataLayer, year, colorize, table) {
             // create the slider control
             var selectControl = L.control({
                 position: 'topright'
@@ -281,8 +282,10 @@
                 // code executed here when change event occurs
                 // console.log('test' + this.value);
                 var currentYear = this.value;
-                // console.log(currentYear);
-                updateData(dataLayer, currentYear, colorize);
+                var currentYearString = "'" + currentYear + "'";
+                console.log(currentYearString);
+                table.updateData([{title: currentYearString, field: currentYearString}])
+                updateMap(dataLayer, currentYear, colorize);
             });
         }
     </script>
