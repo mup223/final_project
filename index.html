@@ -235,6 +235,7 @@
                     }
                 ],
             });
+            console.log(table.columnManager.columns);
 
             // table.hideColumn("2017");
 
@@ -261,7 +262,7 @@
                     fillColor: color
                 });
             })
-            
+
         };
 
         function addUi(dataLayer, year, colorize, table) {
@@ -282,7 +283,7 @@
                 // code executed here when change event occurs
                 // console.log('test' + this.value);
                 var currentYear = this.value;
-                var currentYearString = "'" + currentYear + "'";
+                var currentYearString = '"' + currentYear + '"';
                 console.log(currentYearString);
                 table.updateData([{title: currentYearString, field: currentYearString}])
                 updateMap(dataLayer, currentYear, colorize);
