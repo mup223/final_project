@@ -13,6 +13,7 @@
         integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
         integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Fjalla+One&display=swap" rel="stylesheet">
 
     <style>
         header {
@@ -24,6 +25,21 @@
             text-align: center;
             vertical-align: middle;
         }
+
+        h1 {
+            padding-top: 9px;
+            font-size: 25px;
+            font-family: 'Fjalla One', sans-serif;
+            letter-spacing: 5px;
+            text-decoration: underline;
+            font-weight: bold;
+        }
+
+        h2 {
+            padding-top: 5px;
+            font-family: 'Fjalla One', sans-serif;
+        }
+
         #map {
             position: absolute;
             width: 85%;
@@ -49,28 +65,16 @@
             text-shadow: 1px 1px 2px black, 0 0 1em black, 0 0 0.2em black;
             text-align: center;
         }
-
-        /* #ui-controls {
-            width: 150px;
-        } */
-
-        #ui-container {
-            position: relative;
-            top: 0;
-            right: 0;
-            width: 300px;
-            border: 3px solid #73AD21;
-        }
     </style>
 </head>
 
 <body>
     <header>
-        <h1>This is the Title</h1>
+        <h1>South Carolina 811 Notice Count per County</h1>
+        <h2>This map aggregates the number of notices created each year per county. </h2>
     </header>
     <div id="map">
         <div id="ui-container">
-            <h3>Choose a data attribute:</h3>
             <select id="ui-controls">
                 <option value="2016" selected>2016</option>
                 <option value="2017">2017</option>
@@ -91,8 +95,8 @@
     <script>
         // map options
         var options = {
-            center: [33.765449, -81.037903],
-            zoom: 8,
+            center: [33.605470,-81.057129],
+            zoom: 8.2,
             zoomSnap: .1
         }
 
@@ -105,8 +109,6 @@
             subdomains: 'abcd',
             ext: 'png'
         }).addTo(map);
-
-        // $("#example-table").tabulator();
 
 
         // AJAX request for GeoJSON data
@@ -149,26 +151,16 @@
                         // no need to keep looping, break from inner loop
                         tableData.push(data.data[j]);
                         break;
-                        // console.log(data.data[j].workcounty.trim());
-                        // console.log('county fip: ', props.COUNTYFP);
-                        // console.log('data fip: ', data.data[j].COUNTY_FIP);
                     }
-                    // console.log(data.data[j])
                 }
 
             }
-
-            // console.log(tableData)
-            //console.log('after: ', counties.features);
-            // console.log('props: ', props);
-            // createTable(counties);
 
             // empty array to store all the data values
             var rates = [];
 
             // iterate through all the counties
             counties.features.forEach(function (county) {
-                // console.log(county);
                 // iterate through all the props of each county
                 for (var prop in county.properties) {
                     if (prop != "countyname" && prop != "workcounty") {
@@ -181,13 +173,7 @@
             // chroma.js classification
             var breaks = chroma.limits(rates, 'q', 5);
             var colorize = chroma.scale(chroma.brewer.OrRd).classes(breaks).mode('lab');
-            // console.log(counties.features[0].properties.2016);
-            // countiesOrderd = [{
-            //     'countyname': counties.countyname,
-            //     '2016': counties.2016,
 
-            // }]
-            // county = counties.features;
             drawData(counties, tableData, colorize);
 
         }
@@ -206,9 +192,6 @@
                     };
                 },
                 onEachFeature: function (feature, layer) {
-
-                    // layer.bindPopup(feature.properties.countyname);
-
                     var label = L.marker(layer.getBounds().getCenter(), {
                         icon: L.divIcon({
                             className: 'label',
@@ -217,16 +200,11 @@
                             iconAnchor: [20, 1]
                         })
                     }).addTo(map);
-
-                    // layer.on('click', function () {
-                    //     var props = layer.feature.properties;
-                    //     console.log(props)
-                    // })
                 }
             }).addTo(map);
 
             const columns1 = [{
-                    title: "countyname",
+                    title: "County",
                     field: "countyname"
                 }, //link column to name property of user object
                 {
@@ -235,33 +213,17 @@
                 }
             ];
 
-            // console.log(tableData)
             //define empty table
             var table = new Tabulator("#example-table", {
                 data: tableData,
-                // index: "countyname",
-                // autoColumns: true,
                 layout: "fitColumns",
                 movableColumns: true,
                 columns: columns1
             });
-            // console.log(table.columnManager.columns);
-
-            // add the default
-            // table.addColumn({
-            //         title: "2016",
-            //         field: "2016"
-            //     },
-            //     true,
-            //     "2016"
-            // );
-
-            // table.hideColumn("2017");
 
             //update first time
             updateMap(dataLayer, '2016', colorize, table, '2016');
             addUi(dataLayer, '2016', colorize, table); // add the UI controls
-            // createUI(dataLayer, table, '2016')
 
         }
 
@@ -270,20 +232,15 @@
 
             // updateMap
             dataLayer.eachLayer(function (layer) {
-                // console.log(layer.feature.properties)
                 var val = layer.feature.properties[year];
-                // console.log(val, typeof(val));
                 var color = colorize(val);
-
-                // console.log(color);
                 layer.setStyle({
-                    // stroke: false,
                     fillColor: color
                 });
             });
 
             const columns2 = [{
-                    title: "countyname",
+                    title: "County",
                     field: "countyname"
                 }, //link column to name property of user object
                 {
@@ -293,15 +250,6 @@
             ];
 
             table.setColumns(columns2);
-            // then on UI change
-            // table.deleteColumn("2016");
-            // table.addColumn({
-            //         title: currentYearString,
-            //         field: currentYearString
-            //     },
-            //     true,
-            //     currentYearString
-            // );
         };
 
         function addUi(dataLayer, year, colorize, table, currentYear) {
@@ -320,7 +268,6 @@
 
             $('select[id="ui-controls"]').change(function () {
                 // code executed here when change event occurs
-                // console.log('test' + this.value);
                 var currentYear = this.value;
                 var currentYearString = '"' + currentYear + '"';
                 console.log(currentYearString);
