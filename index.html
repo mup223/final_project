@@ -65,6 +65,55 @@
             text-shadow: 1px 1px 2px black, 0 0 1em black, 0 0 0.2em black;
             text-align: center;
         }
+
+        .legend {
+            padding: 6px 8px;
+            font-size: 1em;
+            background: rgba(75, 75, 75, 0.8);
+            color: whitesmoke;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            width: 180px;
+        }
+
+        .legend h3 {
+            font-size: 1.1em;
+            font-weight: bold;
+            line-height: 1em;
+            color: whitesmoke;
+            margin: 0;
+        }
+
+        .legend h3 span {
+            font-size: 1.3em;
+            margin: 0 20px 0 0;
+        }
+
+        .legend ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 12px 4px 0;
+        }
+
+        .legend li {
+            height: 22px;
+        }
+
+        .legend span {
+            width: 30px;
+            height: 20px;
+            float: left;
+            margin-right: 10px;
+        }
+
+        #ui-controls {
+            width: 176px;
+            padding: 8px 25px 8px 15px;
+            background: rgba(75, 75, 75, 0.8);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            color: whitesmoke;
+        }
     </style>
 </head>
 
@@ -95,9 +144,10 @@
     <script>
         // map options
         var options = {
-            center: [33.605470,-81.057129],
+            center: [33.605470, -81.057129],
             zoom: 8.2,
-            zoomSnap: .1
+            zoomSnap: .1,
+            zoomControl: false
         }
 
         // create the Leaflet map
@@ -175,6 +225,9 @@
             var colorize = chroma.scale(chroma.brewer.OrRd).classes(breaks).mode('lab');
 
             drawData(counties, tableData, colorize);
+
+            // call drawLegend func
+            drawLegend(breaks, colorize);
 
         }
 
@@ -271,9 +324,41 @@
                 var currentYear = this.value;
                 var currentYearString = '"' + currentYear + '"';
                 console.log(currentYearString);
+                $('.legend h3 span').html(currentYear);
                 updateMap(dataLayer, currentYear, colorize, table, currentYear);
             });
         }
+
+        function drawLegend(breaks, colorize) {
+            var legendControl = L.control({
+                position: 'topleft'
+            });
+
+            legendControl.onAdd = function (map) {
+
+                var legend = L.DomUtil.create('div', 'legend');
+                return legend;
+
+            };
+
+            legendControl.addTo(map);
+
+            var legend = $('.legend').html("<h3><span>2016</span> Notices</h3><ul>");
+
+            for (var i = 0; i < breaks.length - 1; i++) {
+
+                var color = colorize(breaks[i], breaks);
+
+                var classRange = '<li><span style="background:' + color + '"></span> ' +
+                    breaks[i].toLocaleString() + ' &mdash; ' +
+                    breaks[i + 1].toLocaleString() + '</li>'
+
+                $('.legend ul').append(classRange);
+            }
+
+            legend.append("</ul>");
+
+        } // end drawLegend()
     </script>
 </body>
 
