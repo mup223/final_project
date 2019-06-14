@@ -14,22 +14,37 @@
 </head>
 
 <body>
-    <header>
-        <h1>South Carolina 811 Notice Count per County</h1>
-        <h2>This map aggregates the number of notices created each year per county. </h2>
-    </header>
-    <div id="map">
-        <div id="ui-container">
-            <select id="ui-controls">
-                <option value="2016" selected>2016</option>
-                <option value="2017">2017</option>
-                <option value="2018">2018</option>
-                <option value="2019">2019</option>
-            </select>
+    <div class="grid">
+        <header class="col col--12 py18">
+            <h1 class="txt-h5 txt-h3-ml pl12 inline-block wmax120 wmax240-mm wmax-none-ml">South Carolina 811 Notice
+                Count per
+                County</h1>
+            <div class="select-container wmax120 fr mr12">
+                <select id="ui-controls" class="select">
+                    <option value="2016" selected>2016</option>
+                    <option value="2017">2017</option>
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
+                </select>
+                <div class="select-arrow"></div>
+            </div>
+        </header>
+        <div class="col col--12 h600 col--9-ml">
+            <div id="map" class="w-full h-full">
+
+            </div>
         </div>
+        <div class="col col--12 col--3-ml">
+            <div id="example-table"></div>
+        </div>
+        <div class="col col--12">
+            <div id="about">
+                <p>This map aggregates the number of notices created each year per county.</p>
+            </div>
+        </div>
+
     </div>
-    <div id="example-table"></div>
-    <!-- ui-controls div is selected by the JS and dynamically added to the map -->
+
 
     <script src="https://code.jquery.com/jquery-3.2.1.js"
         integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
@@ -41,8 +56,8 @@
     <script>
         // map options
         var options = {
-            center: [33.605470, -81.057129],
-            zoom: 8.2,
+            // center: [33.605470, -81.057129],
+            // zoom: 8.2,
             zoomSnap: .1,
             zoomControl: false
         }
@@ -153,6 +168,9 @@
                 }
             }).addTo(map);
 
+            // zoom map to extent of mapped geography
+            map.fitBounds(dataLayer.getBounds());
+
             const columns1 = [{
                     title: "County",
                     field: "countyname"
@@ -208,17 +226,17 @@
 
         function addUi(dataLayer, year, colorize, table, currentYear) {
             // create the slider control
-            var selectControl = L.control({
-                position: 'topright'
-            });
+            // var selectControl = L.control({
+            //     position: 'topright'
+            // });
 
-            // when control is added
-            selectControl.onAdd = function (map) {
-                // get the element with id attribute of ui-controls
-                return L.DomUtil.get("ui-controls");
-            }
-            // add the control to the map
-            selectControl.addTo(map);
+            // // when control is added
+            // selectControl.onAdd = function (map) {
+            //     // get the element with id attribute of ui-controls
+            //     return L.DomUtil.get("ui-controls");
+            // }
+            // // add the control to the map
+            // selectControl.addTo(map);
 
             $('select[id="ui-controls"]').change(function () {
                 // code executed here when change event occurs
@@ -232,7 +250,7 @@
 
         function drawLegend(breaks, colorize) {
             var legendControl = L.control({
-                position: 'topleft'
+                position: 'bottomleft'
             });
 
             legendControl.onAdd = function (map) {

@@ -1,44 +1,32 @@
 header {
-    position: static;
-    top: 0;
-    height: calc(7vh);
-    width: 100%;
     background-color: lightgray;
-    text-align: center;
-    vertical-align: middle;
 }
 
 h1 {
-    padding-top: 9px;
-    font-size: 25px;
     font-family: 'Fjalla One', sans-serif;
-    letter-spacing: 5px;
-    text-decoration: underline;
+    letter-spacing: .2em;
     font-weight: bold;
 }
 
 h2 {
-    padding-top: 5px;
     font-family: 'Fjalla One', sans-serif;
 }
 
 #map {
-    position: absolute;
-    width: 85%;
-    height: calc(93vh);
+    /* position: absolute;
+    height: 100%;
     background-color: darkgray;
-    float: right;
     bottom: 0;
-    right: 0;
+    right: 0; */
 }
 
 #example-table {
-    position: absolute;
+    /* position: absolute;
     width: 15%;
     height: calc(93vh);
     background-color: darkgray;
     float: left;
-    bottom: 0;
+    bottom: 0; */
 }
 
 .label {
@@ -89,33 +77,32 @@ h2 {
 }
 
 #ui-controls {
-    width: 176px;
+    /* width: 176px;
     padding: 8px 25px 8px 15px;
     background: rgba(75, 75, 75, 0.8);
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
-    color: whitesmoke;
+    color: whitesmoke; */
 }
 
 @media only screen and (max-width: 768px) {
     #example-table {
-        position: absolute;
+        /* position: absolute;
         width: 100%;
         height: calc(15vh);
         background-color: darkgray;
         float: bottom;
-        bottom: 0;
+        bottom: 0; */
     }
 
     #map {
-        position: absolute;
+        /* position: absolute;
         width: 100%;
         height: calc(85vh);
         background-color: darkgray;
         float: top;
         top: 0;
-        /* right: 0; */
+        right: 0; */
     }
-    
-}
 
+}
