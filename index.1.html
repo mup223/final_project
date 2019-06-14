@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <title>
+        <!-- Your title goes here -->
+    </title>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel='shortcut icon' href='Your favicon path goes here' type='image/x-icon'>
+    <link href='https://api.mapbox.com/mapbox-assembly/v0.23.2/assembly.min.css' rel='stylesheet'>
+    <script async defer src='https://api.mapbox.com/mapbox-assembly/v0.23.2/assembly.js'></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" />
+    <link href="https://unpkg.com/tabulator-tables@4.2.7/dist/css/tabulator.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.2.1.js"
+        integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+        integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class='flex-parent viewport-full relative scroll-hidden'>
+        <div class='flex-child w-full w240-ml absolute static-ml left bottom'>
+            <div class='flex-parent flex-parent--column viewport-third h-full hmax-full bg-white'>
+                <div class='flex-child flex-child--grow px12 py12 scroll-auto'>
+                    <h3 class='txt-m txt-bold mb6'>South Carolina 811 Notice Count per County</h3>
+                    <div id="example-table"></div>
+                </div>
+            </div>
+        </div>
+        <div class='flex-child flex-child--grow bg-darken10 viewport-twothirds viewport-full-ml'>
+            <div id="map"></div>
+            <div class='select-container fixed right my24 mx24'>
+                <select class='select'>
+                    <option value="2016" selected>2016</option>
+                    <option value="2017">2017</option>
+                    <option value="2018">2018</option>
+                    <option value="2019">2019</option>
+                </select>
+                <div class='select-arrow'></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.2.7/dist/js/tabulator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.3.6/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/1.3.5/chroma.min.js"></script>
+    <script>
+        // map options
+        var options = {
+            center: [33.605470, -81.057129],
+            zoom: 8.2,
+            zoomSnap: .1,
+            zoomControl: false
+        }
+
+        // create the Leaflet map
+        var map = L.map('map', options);
+
+        // request tiles and add to map
+        var tiles = L.tileLayer('http://{s}.tile.stamen.com/toner-background/{z}/{x}/{y}.{ext}', {
+            attribution: 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data &copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+            subdomains: 'abcd',
+            ext: 'png'
+        }).addTo(map);
+
+
+        // // AJAX request for GeoJSON data
+        // $.getJSON("data/counties.json", function (counties) {
+        //         Papa.parse('data/ticketCountsPivoted.csv', {
+
+        //             download: true,
+        //             header: true,
+        //             complete: function (data) {
+
+        //                 processData(counties, data);
+
+        //             }
+        //         }); // end of Papa.parse()
+
+        //     })
+        //     .fail(function () {
+        //         console.log('an error occured with the ajax/json')
+        //     });
+
+        // function processData(counties, data) {
+
+        //     var tableData = [];
+
+        //     // loop through all the counties
+        //     for (var i = 0; i < counties.features.length; i++) {
+
+        //         // short-hand reference to county properties
+        //         var props = counties.features[i].properties;
+
+        //         // console.log(props.countyname.trim());
+
+        //         // for each of the CSV data rows
+        //         for (var j = 0; j < data.data.length; j++) {
+        //             // if the county fips code and data fips code match
+        //             if (props.countyname === data.data[j].countyname.trim()) {
+        //                 data.data[j].countyname = data.data[j].countyname.trim()
+        //                 // re-assign the data for that county as the county's props
+        //                 counties.features[i].properties = data.data[j];
+        //                 // no need to keep looping, break from inner loop
+        //                 tableData.push(data.data[j]);
+        //                 break;
+        //             }
+        //         }
+
+        //     }
+
+        //     // empty array to store all the data values
+        //     var rates = [];
+
+        //     // iterate through all the counties
+        //     counties.features.forEach(function (county) {
+        //         // iterate through all the props of each county
+        //         for (var prop in county.properties) {
+        //             if (prop != "countyname" && prop != "workcounty") {
+        //                 // push that attribute value into the array
+        //                 rates.push(Number(county.properties[prop]));
+        //             }
+        //         }
+        //     })
+
+        //     // chroma.js classification
+        //     var breaks = chroma.limits(rates, 'q', 5);
+        //     var colorize = chroma.scale(chroma.brewer.OrRd).classes(breaks).mode('lab');
+
+        //     drawData(counties, tableData, colorize);
+
+        //     // call drawLegend func
+        //     drawLegend(breaks, colorize);
+
+        // }
+
+        // function drawData(counties, tableData, colorize) {
+
+        //     // create empty map
+        //     var dataLayer = L.geoJson(counties, {
+        //         style: function (feature) {
+        //             return {
+        //                 color: 'black',
+        //                 weight: 1,
+        //                 fillOpacity: 1,
+        //                 fillColor: '#1f78b4',
+        //                 color: '#000000'
+        //             };
+        //         },
+        //         onEachFeature: function (feature, layer) {
+        //             var label = L.marker(layer.getBounds().getCenter(), {
+        //                 icon: L.divIcon({
+        //                     className: 'label',
+        //                     html: feature.properties.countyname,
+        //                     iconSize: [10, 10],
+        //                     iconAnchor: [20, 1]
+        //                 })
+        //             }).addTo(map);
+        //         }
+        //     }).addTo(map);
+
+        //     const columns1 = [{
+        //             title: "County",
+        //             field: "countyname"
+        //         }, //link column to name property of user object
+        //         {
+        //             title: "2016",
+        //             field: "2016"
+        //         }
+        //     ];
+
+        //     //define empty table
+        //     var table = new Tabulator("#example-table", {
+        //         data: tableData,
+        //         layout: "fitColumns",
+        //         movableColumns: true,
+        //         columns: columns1
+        //     });
+
+        //     //update first time
+        //     updateMap(dataLayer, '2016', colorize, table, '2016');
+        //     addUi(dataLayer, '2016', colorize, table); // add the UI controls
+
+        // }
+
+        // // this function will be called many times
+        // function updateMap(dataLayer, year, colorize, table, currentYear) {
+
+        //     // updateMap
+        //     dataLayer.eachLayer(function (layer) {
+        //         var val = layer.feature.properties[year];
+        //         var color = colorize(val);
+        //         layer.setStyle({
+        //             fillColor: color
+        //         });
+        //     });
+
+        //     const columns2 = [{
+        //             title: "County",
+        //             field: "countyname"
+        //         }, //link column to name property of user object
+        //         {
+        //             title: currentYear,
+        //             field: currentYear
+        //         }
+        //     ];
+
+        //     table.setColumns(columns2);
+        // };
+
+        // function addUi(dataLayer, year, colorize, table, currentYear) {
+        //     // create the slider control
+        //     var selectControl = L.control({
+        //         position: 'topright'
+        //     });
+
+        //     // when control is added
+        //     selectControl.onAdd = function (map) {
+        //         // get the element with id attribute of ui-controls
+        //         return L.DomUtil.get("ui-controls");
+        //     }
+        //     // add the control to the map
+        //     selectControl.addTo(map);
+
+        //     $('select[id="ui-controls"]').change(function () {
+        //         // code executed here when change event occurs
+        //         var currentYear = this.value;
+        //         var currentYearString = '"' + currentYear + '"';
+        //         console.log(currentYearString);
+        //         $('.legend h3 span').html(currentYear);
+        //         updateMap(dataLayer, currentYear, colorize, table, currentYear);
+        //     });
+        // }
+
+        // function drawLegend(breaks, colorize) {
+        //     var legendControl = L.control({
+        //         position: 'topleft'
+        //     });
+
+        //     legendControl.onAdd = function (map) {
+
+        //         var legend = L.DomUtil.create('div', 'legend');
+        //         return legend;
+
+        //     };
+
+        //     legendControl.addTo(map);
+
+        //     var legend = $('.legend').html("<h3><span>2016</span> Notices</h3><ul>");
+
+        //     for (var i = 0; i < breaks.length - 1; i++) {
+
+        //         var color = colorize(breaks[i], breaks);
+
+        //         var classRange = '<li><span style="background:' + color + '"></span> ' +
+        //             breaks[i].toLocaleString() + ' &mdash; ' +
+        //             breaks[i + 1].toLocaleString() + '</li>'
+
+        //         $('.legend ul').append(classRange);
+        //     }
+
+        //     legend.append("</ul>");
+
+        // } // end drawLegend()
+    </script>
+</body>
+
+</html>

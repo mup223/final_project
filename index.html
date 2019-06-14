@@ -14,107 +14,7 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
         integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css?family=Fjalla+One&display=swap" rel="stylesheet">
-
-    <style>
-        header {
-            position: absolute;
-            top: 0;
-            height: calc(7vh);
-            width: 100%;
-            background-color: lightgray;
-            text-align: center;
-            vertical-align: middle;
-        }
-
-        h1 {
-            padding-top: 9px;
-            font-size: 25px;
-            font-family: 'Fjalla One', sans-serif;
-            letter-spacing: 5px;
-            text-decoration: underline;
-            font-weight: bold;
-        }
-
-        h2 {
-            padding-top: 5px;
-            font-family: 'Fjalla One', sans-serif;
-        }
-
-        #map {
-            position: absolute;
-            width: 85%;
-            height: calc(93vh);
-            background-color: darkgray;
-            float: right;
-            bottom: 0;
-            right: 0;
-        }
-
-        #example-table {
-            position: absolute;
-            width: 15%;
-            height: calc(93vh);
-            background-color: darkgray;
-            float: left;
-            bottom: 0;
-        }
-
-        .label {
-            color: white;
-            font-size: 10px;
-            text-shadow: 1px 1px 2px black, 0 0 1em black, 0 0 0.2em black;
-            text-align: center;
-        }
-
-        .legend {
-            padding: 6px 8px;
-            font-size: 1em;
-            background: rgba(75, 75, 75, 0.8);
-            color: whitesmoke;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
-            width: 180px;
-        }
-
-        .legend h3 {
-            font-size: 1.1em;
-            font-weight: bold;
-            line-height: 1em;
-            color: whitesmoke;
-            margin: 0;
-        }
-
-        .legend h3 span {
-            font-size: 1.3em;
-            margin: 0 20px 0 0;
-        }
-
-        .legend ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 12px 4px 0;
-        }
-
-        .legend li {
-            height: 22px;
-        }
-
-        .legend span {
-            width: 30px;
-            height: 20px;
-            float: left;
-            margin-right: 10px;
-        }
-
-        #ui-controls {
-            width: 176px;
-            padding: 8px 25px 8px 15px;
-            background: rgba(75, 75, 75, 0.8);
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
-            color: whitesmoke;
-        }
-    </style>
+    <link rel="stylesheet" href="style/styles.css" />
 </head>
 
 <body>
@@ -271,7 +171,11 @@
                 data: tableData,
                 layout: "fitColumns",
                 movableColumns: true,
-                columns: columns1
+                columns: columns1,
+                rowClick: function (e, row) { //trigger an alert message when the row is clicked
+                    // alert("Row " + row.getData().countyname + " Clicked!!!!");
+                    console.log(e);
+                }
             });
 
             //update first time
@@ -359,6 +263,8 @@
             legend.append("</ul>");
 
         } // end drawLegend()
+
+        
     </script>
 </body>
 
