@@ -156,6 +156,7 @@
                 }
             }).addTo(map);
 
+            // console.log(dataLayer.feature.layer);
             const columns1 = [{
                     title: "County",
                     field: "countyname"
@@ -174,7 +175,7 @@
                 columns: columns1,
                 rowClick: function (e, row) { //trigger an alert message when the row is clicked
                     // alert("Row " + row.getData().countyname + " Clicked!!!!");
-                    console.log(e);
+                    console.log(tableData);
                 }
             });
 
@@ -264,7 +265,7 @@
 
         } // end drawLegend()
 
-        
+
     </script>
 </body>
 
