@@ -171,6 +171,7 @@
             var table = new Tabulator("#example-table", {
                 data: tableData,
                 layout: "fitColumns",
+                footerElement:"<p style=\"text-align:left\">Map by: <a href=\"https://github.com/mup223\">Matthew Upchurch</a> <br>Data Source: <a href=\"https://sc811.com/\">SC811</a></p>",
                 movableColumns: true,
                 columns: columns1,
                 rowClick: function (e, row) { //trigger an alert message when the row is clicked

@@ -98,10 +98,20 @@ h2 {
 }
 
 @media only screen and (max-width: 768px) {
+    header {
+        position: static;
+        top: 0;
+        height: calc(7vh);
+        width: 100%;
+        background-color: lightgray;
+        text-align: center;
+        vertical-align: middle;
+    }
+
     #example-table {
         position: absolute;
         width: 100%;
-        height: calc(15vh);
+        height: calc(20vh);
         background-color: darkgray;
         float: bottom;
         bottom: 0;
@@ -110,12 +120,10 @@ h2 {
     #map {
         position: absolute;
         width: 100%;
-        height: calc(85vh);
+        height: calc(73vh);
         background-color: darkgray;
-        float: top;
-        top: 0;
+        bottom: 210px;
         /* right: 0; */
     }
-    
-}
 
+}
