@@ -153,6 +153,23 @@
                             iconAnchor: [20, 1]
                         })
                     }).addTo(map);
+                    // when mousing over a layer
+                    layer.on('mouseover', function () {
+                        // console.log(layer.feature.properties.countyname);
+                        if (layer.feature.properties.countyname == 'RICHLAND') {
+
+
+                        };
+                    });
+
+                    // on mousing off layer
+                    layer.on('mouseout', function () {
+
+                        // reset the layer style to its original stroke color
+                        layer.setStyle({
+                            color: '#000000'
+                        });
+                    });
                 }
             }).addTo(map);
 
@@ -171,20 +188,37 @@
             var table = new Tabulator("#example-table", {
                 data: tableData,
                 layout: "fitColumns",
-                footerElement:"<p style=\"text-align:left\">Map by: <a href=\"https://github.com/mup223\">Matthew Upchurch</a> <br>Data Source: <a href=\"https://sc811.com/\">SC811</a></p>",
+                footerElement: "<p style=\"text-align:left\">Map by: <a href=\"https://github.com/mup223\">Matthew Upchurch</a> <br>Data Source: <a href=\"https://sc811.com/\">SC811</a></p>",
                 movableColumns: true,
                 columns: columns1,
                 rowClick: function (e, row) { //trigger an alert message when the row is clicked
                     // alert("Row " + row.getData().countyname + " Clicked!!!!");
-                    console.log(tableData);
+                    // console.log(row.getData().countyname);
+                    county = row.getData().countyname;
+                    highlightMap(county,dataLayer);
                 }
             });
+
+            function highlightMap(county, dataLayer) {
+                console.log(county)
+                dataLayer.eachLayer(function (layer) {
+                    layer.setStyle({
+                        color: '#ff6e00'
+                    });
+                });
+                // change the stroke color and bring that element to the front
+                // layer.setStyle({
+                //     color: '#ff6e00'
+                // }).bringToFront();
+            };
 
             //update first time
             updateMap(dataLayer, '2016', colorize, table, '2016');
             addUi(dataLayer, '2016', colorize, table); // add the UI controls
 
-        }
+        };
+
+
 
         // this function will be called many times
         function updateMap(dataLayer, year, colorize, table, currentYear) {
@@ -265,8 +299,6 @@
             legend.append("</ul>");
 
         } // end drawLegend()
-
-
     </script>
 </body>
 
