@@ -156,10 +156,10 @@
                     // when mousing over a layer
                     layer.on('mouseover', function () {
                         // console.log(layer.feature.properties.countyname);
-                        if (layer.feature.properties.countyname == 'RICHLAND') {
+                        // if (layer.feature.properties.countyname == 'RICHLAND') {
 
 
-                        };
+                        // };
                     });
 
                     // on mousing off layer
@@ -204,8 +204,15 @@
                 dataLayer.eachLayer(function (layer) {
                     if (county == layer.feature.properties.countyname) {
                         console.log(layer.feature.properties);
-                        layer.setStyle({
-                            color: '#ff6e00'
+                        layer.on('mouseover', function () {
+                            layer.setStyle({
+                                color: '#ff6e00'
+                            });
+                            // console.log(layer.feature.properties.countyname);
+                            // if (layer.feature.properties.countyname == 'RICHLAND') {
+
+
+                            // };
                         });
                     }
                 });

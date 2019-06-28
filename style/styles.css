@@ -41,6 +41,10 @@ h2 {
     bottom: 0;
 }
 
+.tabulator .tabulator-row:hover{
+    background-color:red;
+}
+
 .label {
     color: white;
     font-size: 10px;
