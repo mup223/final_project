@@ -195,16 +195,19 @@
                     // alert("Row " + row.getData().countyname + " Clicked!!!!");
                     // console.log(row.getData().countyname);
                     county = row.getData().countyname;
-                    highlightMap(county,dataLayer);
+                    highlightMap(county, dataLayer);
                 }
             });
 
             function highlightMap(county, dataLayer) {
-                console.log(county)
+                // console.log(county)
                 dataLayer.eachLayer(function (layer) {
-                    layer.setStyle({
-                        color: '#ff6e00'
-                    });
+                    if (county == layer.feature.properties.countyname) {
+                        console.log(layer.feature.properties);
+                        layer.setStyle({
+                            color: '#ff6e00'
+                        });
+                    }
                 });
                 // change the stroke color and bring that element to the front
                 // layer.setStyle({
